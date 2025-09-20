@@ -1,11 +1,15 @@
-# .github/workflows/app.yml
-name: App Pipeline
-
+name: Deploy PubSub + Kafka + RabbiMQ with Terraform and Ansible
 on:
-  workflow_run:
-    workflows: ["Infra Pipeline"]
-    types:
-      - completed
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy (dev, prod)"
+        required: true
+        default: dev
+
+permissions:
+  contents: read
+  id-token: write
 
 jobs:
   deploy-function:

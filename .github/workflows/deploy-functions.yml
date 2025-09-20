@@ -1,0 +1,25 @@
+# .github/workflows/app.yml
+name: App Pipeline
+
+on:
+  workflow_run:
+    workflows: ["Infra Pipeline"]
+    types:
+      - completed
+
+jobs:
+  deploy-function:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_CREDENTIALS }}
+      - run: |
+          gcloud functions deploy process_csv_to_pubsub \
+            --runtime python310 \
+            --trigger-resource dev-pubsub-focus-infusion-463923-t8-my-bucket-7828 \
+            --trigger-event google.storage.object.finalize \
+            --entry-point process_csv_to_pubsub \
+            --region us-east1 \
+            --source functions/

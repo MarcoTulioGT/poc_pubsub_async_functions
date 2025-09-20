@@ -1,4 +1,4 @@
-name: Deploy PubSub + Kafka + RabbiMQ with Terraform and Ansible
+name: Deploy App Cloud Functions
 on:
   workflow_dispatch:
     inputs:

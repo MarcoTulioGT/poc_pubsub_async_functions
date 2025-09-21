@@ -39,7 +39,7 @@ jobs:
             --gen2 \
             --runtime python310 \
             --region  ${{ vars.GCP_REGION }} \
-            --source functions/csv_to_pubsub \
+            --source csv_to_pubsub \
             --entry-point process_csv_to_pubsub \
             --trigger-event google.storage.object.finalize \
             --trigger-resource dev-pubsub-focus-infusion-463923-t8-my-bucket-7828

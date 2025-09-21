@@ -23,4 +23,16 @@ jobs:
       # 3. Configurar gcloud
       - uses: google-github-actions/setup-gcloud@v2
         with:
-          project_id: ${{ secrets.GCP_PROJECT }}
+          project_id: ${{ vars.GCP_PROJECT }}
+      
+      # 4. Desplegar la Cloud Function
+      - name: Deploy Function
+        run: |
+          gcloud functions deploy process_csv_to_pubsub \
+            --gen2 \
+            --runtime python310 \
+            --region us-central1 \
+            --source functions/csv_to_pubsub \
+            --entry-point process_csv_to_pubsub \
+            --trigger-event google.storage.object.finalize \
+            --trigger-resource dev-pubsub-focus-infusion-463923-t8-my-bucket-7828

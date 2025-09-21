@@ -1,10 +1,11 @@
 name: Deploy Cloud Function
-on: 
-  push:
-    branches:
-      - main
-    paths:
-      - 'csv_to_pubsub/**'
+on:
+   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy (dev, prod)"
+        required: true
+        default: dev
 
 jobs:
   deploy:

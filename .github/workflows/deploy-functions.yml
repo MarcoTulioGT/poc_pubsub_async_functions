@@ -9,7 +9,14 @@ on:
 
 jobs:
   deploy:
+    name: Deploy Cloud Function to GCP
     runs-on: ubuntu-latest
+    environment:
+     name: Development
+    defaults:
+      run:
+        shell: bash
+        working-directory: terraform/envs/${{ github.event.inputs.environment }}
 
     steps:
       # 1. Checkout repo
@@ -31,7 +38,7 @@ jobs:
           gcloud functions deploy process_csv_to_pubsub \
             --gen2 \
             --runtime python310 \
-            --region us-central1 \
+            --region  ${{ vars.GCP_REGION }} \
             --source functions/csv_to_pubsub \
             --entry-point process_csv_to_pubsub \
             --trigger-event google.storage.object.finalize \

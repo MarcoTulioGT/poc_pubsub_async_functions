@@ -1,29 +1,25 @@
-name: Deploy App Cloud Functions
-on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment to deploy (dev, prod)"
-        required: true
-        default: dev
-
-permissions:
-  contents: read
-  id-token: write
+name: Deploy Cloud Function
+on: 
+  push:
+    branches:
+      - main
+    paths:
+      - 'csv_to_pubsub/**'
 
 jobs:
-  deploy-function:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout repo
       - uses: actions/checkout@v4
+
+      # 2. Autenticarse en GCP
       - uses: google-github-actions/auth@v2
         with:
           credentials_json: ${{ secrets.GCP_CREDENTIALS }}
-      - run: |
-          gcloud functions deploy process_csv_to_pubsub \
-            --runtime python310 \
-            --trigger-resource dev-pubsub-focus-infusion-463923-t8-my-bucket-7828 \
-            --trigger-event google.storage.object.finalize \
-            --entry-point process_csv_to_pubsub \
-            --region us-east1 \
-            --source functions/
+
+      # 3. Configurar gcloud
+      - uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT }}
